@@ -13,7 +13,7 @@ def init_db(temat):
     return conn
 
 # Funkcja do scrapowania wyrazów z elementów o klasie 'wordlist-item'
-def scrapuj_wiki(url):
+def scrapuj(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -50,10 +50,10 @@ def wypisz_z_bazy(conn, temat):
 
 # Główna funkcja
 def main():
-    temat = "furniture"
-    url = "https://www.enchantedlearning.com/wordlist/furniture.shtml"
+    temat = "vegetables"
+    url = "https://www.enchantedlearning.com/wordlist/vegetables.shtml"
 
-    slowa = scrapuj_wiki(url)  # Scrapujemy dane z podanego URL
+    slowa = scrapuj(url)  # Scrapujemy dane z podanego URL
 
     if slowa:
         conn = init_db(temat)  # Tworzymy bazę danych i odpowiednią tabelę dla tematu
