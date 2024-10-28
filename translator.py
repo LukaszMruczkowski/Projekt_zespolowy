@@ -1,19 +1,27 @@
-from translate import Translator
+import deepl
 import sqlite3
 
-languages = ["fr", "hr", "cs", "de", "pl"]
+auth_key = "ae890d15-3173-4e2f-bc36-90807286369c:fx"  # Replace with your key
+translator = deepl.Translator(auth_key)
+
+languages = ["FR", "ES", "CS", "DE", "PL"]
 
 # Connect with database of words
 words_conn = sqlite3.connect("words.db")
 
 words_cursor = words_conn.cursor()
 
+# This line for translating whole database
 tables = words_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+
+# Use this if you want to translate only one table
+#tables = [("containers",)]
+
 
 # Do translation for every
 for table in tables:
     # Create new database with translated words
-    translated_words_conn = sqlite3.connect("translated_words.db")
+    translated_words_conn = sqlite3.connect("translated_words_deepL.db")
     translated_words_cursor = translated_words_conn.cursor()
     # Create table
     translated_words_cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table[0]} (
@@ -29,9 +37,8 @@ for table in tables:
     for word in words:
         translated_words = [word[0]]
         for language in languages:
-            translator = Translator(language)
-            translated_word = translator.translate(word[0])
-            translated_words.append(translated_word)
+            translated_word = translator.translate_text(word[0], source_lang="EN", target_lang=language, context=table[0]) 
+            translated_words.append(str(translated_word))
         print(f"TRANSLATED WORDS: {translated_words}\n")
         translated_words_cursor.execute(f"""INSERT OR IGNORE INTO {table[0]} 
                                     (word, 
