@@ -25,7 +25,7 @@ def zapisz_do_folderu(temat, slowa):
     path = rf"{os.getcwd()}/words"
     if not os.path.exists(path):
         os.makedirs(path)
-    with open(rf"{path}/{temat}", "w", encoding="utf-8") as file:
+    with open(rf"{path}/{temat}.csv", "w", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerows([slowa])
     
